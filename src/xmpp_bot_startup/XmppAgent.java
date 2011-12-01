@@ -34,9 +34,9 @@ public class XmppAgent {
 		login(agentCredentials);
 
 		chatManager = connection.getChatManager();
-		
+
 		listener = createMessageListener();
-		
+
 		pokeBuddies();
 	}
 
@@ -63,9 +63,17 @@ public class XmppAgent {
 
 	private void login(Properties agentCredentials) {
 		String username, password;
-		// username = password = host = serviceName = null;
-		username = agentCredentials.getProperty("agent.username");
-		password = agentCredentials.getProperty("agent.password");
+		username = password = null;
+
+		try {
+			username = agentCredentials.getProperty("agent.username");
+			password = agentCredentials.getProperty("agent.password");
+		} catch (NullPointerException e) {
+			e.printStackTrace();
+		} catch (NumberFormatException e) {
+			e.printStackTrace();
+		}
+
 		try {
 			connection.login(username, password);
 		} catch (XMPPException invalidCredentials) {
@@ -76,11 +84,18 @@ public class XmppAgent {
 
 	private XMPPConnection createConnection(Properties agentCredentials) {
 		String host, serviceName;
+		host = serviceName = null;
 		int port = 0;
-
-		host = agentCredentials.getProperty("server.host");
-		port = Integer.parseInt(agentCredentials.getProperty("server.port"));
-		serviceName = agentCredentials.getProperty("server.serviceName");
+		try {
+			host = agentCredentials.getProperty("server.host");
+			port = Integer
+					.parseInt(agentCredentials.getProperty("server.port"));
+			serviceName = agentCredentials.getProperty("server.serviceName");
+		} catch (NullPointerException e) {
+			e.printStackTrace();
+		} catch (NumberFormatException e) {
+			e.printStackTrace();
+		}
 
 		ConnectionConfiguration config = new ConnectionConfiguration(host,
 				port, serviceName);
