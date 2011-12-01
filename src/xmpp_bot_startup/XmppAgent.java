@@ -10,7 +10,7 @@ import org.jivesoftware.smack.XMPPConnection;
 import org.jivesoftware.smack.XMPPException;
 import org.jivesoftware.smack.packet.Message;
 
-public class xmppAgent {
+public class XmppAgent {
 
 	String agentCred [] = {"username", "password"};
 	String buddies [] = {"Buddy 1", "Buddy 2", "Buddy 3"};
@@ -18,6 +18,8 @@ public class xmppAgent {
 	private void connectToMessageService(){
 		ConnectionConfiguration config = new ConnectionConfiguration("service.name.com", 80, "service.com");
 		XMPPConnection connection = new XMPPConnection(config);
+		
+		
 		
 		try {
 			connection.connect();
