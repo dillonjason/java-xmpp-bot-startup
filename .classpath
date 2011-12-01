@@ -2,9 +2,9 @@
 <classpath>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.6"/>
-	<classpathentry kind="lib" path="C:/Users/Dillon/School/CMSC 451/smack_3_2_1/smack.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Dillon/School/CMSC 451/smack_3_2_1/smackx.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Dillon/School/CMSC 451/smack_3_2_1/smackx-debug.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Dillon/School/CMSC 451/smack_3_2_1/smackx-jingle.jar"/>
+	<classpathentry kind="lib" path="libs/smack.jar"/>
+	<classpathentry kind="lib" path="libs/smackx-debug.jar"/>
+	<classpathentry kind="lib" path="libs/smackx-jingle.jar"/>
+	<classpathentry kind="lib" path="libs/smackx.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
