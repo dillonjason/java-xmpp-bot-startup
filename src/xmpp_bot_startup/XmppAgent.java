@@ -1,6 +1,9 @@
 package xmpp_bot_startup;
 
-import java.util.ArrayList;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.util.Properties;
 
 import org.jivesoftware.smack.Chat;
 import org.jivesoftware.smack.ChatManager;
@@ -12,41 +15,73 @@ import org.jivesoftware.smack.packet.Message;
 
 public class XmppAgent {
 
-	String agentCred [] = {"username", "password"};
-	String buddies [] = {"Buddy 1", "Buddy 2", "Buddy 3"};
-	
-	private void connectToMessageService(){
-		ConnectionConfiguration config = new ConnectionConfiguration("service.name.com", 80, "service.com");
+	private static final String SERVER_LOGIN_CREDENTIALS_PROPERTIES_PATH = "server-login-credentials.xml";
+
+	String buddies[] = { "Buddy 1", "Buddy 2", "Buddy 3" };
+
+	public static void main(String[] args) {
+		new XmppAgent().connectToMessageService();
+	}
+
+	private void connectToMessageService() {
+		Properties agentCredentials = new Properties();
+		try {
+			FileInputStream fis = new FileInputStream(
+					SERVER_LOGIN_CREDENTIALS_PROPERTIES_PATH);
+			agentCredentials.loadFromXML(fis);
+			fis.close();
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+		String username, password, host, serviceName;
+		username = password = host = serviceName = null;
+		int port = 0;
+
+		try {
+			username = agentCredentials.getProperty("agent.username");
+			username = agentCredentials.getProperty("agent.password");
+
+			host = agentCredentials.getProperty("server.host");
+			port = Integer.parseInt(agentCredentials.getProperty("server.port"));
+			serviceName = agentCredentials.getProperty("server.serviceName");
+		} catch (NullPointerException e) {
+			e.printStackTrace();
+		} catch (NumberFormatException e) {
+			e.printStackTrace();
+		}
+
+		ConnectionConfiguration config = new ConnectionConfiguration(host,
+				port, serviceName);
 		XMPPConnection connection = new XMPPConnection(config);
-		
-		
-		
+
 		try {
 			connection.connect();
 		} catch (XMPPException canNotConnectError) {
-			// TODO Auto-generated catch block
 			canNotConnectError.printStackTrace();
 		}
+
 		try {
-			connection.login(agentCred[0], agentCred[1]);
+			connection.login(username, password);
 		} catch (XMPPException invalidCredentials) {
-			// TODO Auto-generated catch block
 			invalidCredentials.printStackTrace();
 		}
-		
-		System.out.println (agentCred[0] + " has started");
-		
-		ChatManager chatmanager = connection.getChatManager();
-		MessageListener listener = new MessageListener(){
-			public void processMessage(Chat chat, Message message){
+
+		System.out.println(username + " bot has started");
+
+		ChatManager chatManager = connection.getChatManager();
+		MessageListener listener = new MessageListener() {
+			public void processMessage(Chat chat, Message message) {
 				System.out.println("I got a message!");
 			}
 		};
-		
-		System.out.println ("Message listen is created");
-		
-		for (int i = 0; i < buddies.length; i++){
-			Chat newChat = chatmanager.createChat(buddies[i], listener);
+
+		System.out.println("Message listener is created");
+
+		for (int i = 0; i < buddies.length; i++) {
+			Chat newChat = chatManager.createChat(buddies[i], listener);
 			try {
 				newChat.sendMessage("Hello, " + buddies[i] + " !");
 			} catch (XMPPException messageNotRetrieved) {
@@ -56,4 +91,3 @@ public class XmppAgent {
 		}
 	}
 }
-
